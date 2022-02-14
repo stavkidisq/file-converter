@@ -3,5 +3,15 @@
     ViewData["Title"] = "Pdf_To_Jpg";
 }
 
-<h1>From JPG to PDF</h1>
+<h1>From PDF to JPG</h1>
 
+<form asp-action="Pdf_To_Jpg" asp-controller="ConvertFromPdf" method="post" enctype="multipart/form-data">
+    <input type="file" name="uploadedFile"/>
+    <input type="submit" value="Upload"/>
+</form>
+
+<h2>File</h2>
+@if(Model != null)
+{
+ <p>@Model.FileName</p>   
+}
