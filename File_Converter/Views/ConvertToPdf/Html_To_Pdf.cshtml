@@ -1,9 +1,10 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Html_To_Pdf";
 }
 
 <h1>From HTML to PDF</h1>
+
+<div asp-validation-summary="All"></div>
 
 <form asp-action="Html_To_Pdf" asp-controller="ConvertToPdf" method="post">
     <label>URL of page:</label><br />
