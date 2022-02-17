@@ -8,6 +8,9 @@ using Microsoft.Extensions.FileProviders;
 using System.Net.Http.Headers;
 using Aspose.Pdf;
 using System.Net;
+using File_Converter.Models.ValidationAttributes;
+using System.ComponentModel.DataAnnotations;
+using File_Converter.Models.BusinessModels;
 
 namespace File_Converter.Controllers
 {
@@ -46,23 +49,25 @@ namespace File_Converter.Controllers
         /// <param name="uploadedFile">Contains all information about file, which will be convert</param>
         /// <returns>If everything is ok, then current pdf file</returns>
         [HttpPost]
-        public async Task<IActionResult> Word_To_Pdf(IFormFile uploadedFile)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Word_To_Pdf(UploadWordModel uploadedFile)
         {
-            if (uploadedFile != null)
+            if(ModelState.IsValid)
             {
                 // Path to the folder Files
-                string path = @"\files\" + uploadedFile.FileName;
+                string path = @"\files\" + uploadedFile.Information.FileName;
 
                 // Save files in Files in catalog wwwroot
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                 {
-                    await uploadedFile.CopyToAsync(fileStream);
+                    await uploadedFile.Information.CopyToAsync(fileStream);
                 }
 
                 //Convert file from WORD to PDF
                 string dirPath = @"wwwroot\files\";
                 return File
-                    (await ConvertDOCXFile(dirPath, uploadedFile.FileName), "application/pdf");
+                    (await ConvertDOCXFile(dirPath, uploadedFile.Information.FileName), "application/pdf");
+
             }
 
             return View();
@@ -106,25 +111,26 @@ namespace File_Converter.Controllers
         /// <param name="uploadedFile">Contains all information about file, which will be convert</param>
         /// <returns>If everything is ok, then current pdf file</returns>
         [HttpPost]
-        public async Task<IActionResult> PowerPoint_To_Pdf(IFormFile uploadedFile)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PowerPoint_To_Pdf(UploadPowerPointModel uploadedFile)
         {
-            //Uploaded file should not be empty;
-            if (uploadedFile != null)
+            if(ModelState.IsValid)
             {
                 // Path to the folder Files;
-                string path = @"\files\" + uploadedFile.FileName;
+                string path = @"\files\" + uploadedFile.Information.FileName;
 
                 // Save files in Files in catalog wwwroot;
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                 {
-                    await uploadedFile.CopyToAsync(fileStream);
+                    await uploadedFile.Information.CopyToAsync(fileStream);
                 }
 
                 //Convert file from POWERPOINT to PDF;
                 string dirPath = @"wwwroot\files\";
 
                 // TODO: may be allows uploadedFile.Name
-                return File(await ConvertPPTXFile(dirPath, uploadedFile.FileName), "application/pdf");
+                return File(await ConvertPPTXFile(dirPath, uploadedFile.Information.FileName), "application/pdf");
+
             }
 
             return View();
@@ -167,25 +173,27 @@ namespace File_Converter.Controllers
         /// </summary>
         /// <param name="uploadedFile">Contains all information about file, which will be convert</param>
         /// <returns>If everything is ok, then current pdf file</returns>
-        public async Task<IActionResult> Excel_To_Pdf(IFormFile uploadedFile)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Excel_To_Pdf(UploadExcelModel uploadedFile)
         {
-            //Uploaded file should not be empty;
-            if (uploadedFile != null)
+            if(ModelState.IsValid)
             {
                 // Path to the folder Files;
-                string path = @"\files\" + uploadedFile.FileName;
+                string path = @"\files\" + uploadedFile.Information.FileName;
 
                 // Save files in Files in catalog wwwroot;
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                 {
-                    await uploadedFile.CopyToAsync(fileStream);
+                    await uploadedFile.Information.CopyToAsync(fileStream);
                 }
 
                 //Convert file from EXCEL to PDF;
                 string dirPath = @"wwwroot\files\";
 
                 // TODO: may be allows uploadedFile.Name
-                return File(await ConvertEXCELFile(dirPath, uploadedFile.FileName), "application/pdf");
+                return File(await ConvertEXCELFile(dirPath, uploadedFile.Information.FileName), "application/pdf");
+
             }
 
             return View();
@@ -224,30 +232,31 @@ namespace File_Converter.Controllers
         }
 
         /// <summary>
-        /// This method with HttpPost attribute converts all files from .xlsx, .xls to .pdf;
+        /// This method with HttpPost attribute converts all files from .jpg to .pdf;
         /// </summary>
         /// <param name="uploadedFile">Contains all information about file, which will be convert</param>
         /// <returns>If everything is ok, then current pdf file</returns>
         [HttpPost]
-        public async Task<IActionResult> Jpg_To_Pdf(IFormFile uploadedFile)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Jpg_To_Pdf(UploadJpgModel uploadedFile)
         {
-            //Uploaded file should not be empty;
-            if (uploadedFile != null)
+            if(ModelState.IsValid)
             {
                 // Path to the folder Files;
-                string path = @"\files\" + uploadedFile.FileName;
+                string path = @"\files\" + uploadedFile.Information.FileName;
 
                 // Save files in Files in catalog wwwroot;
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                 {
-                    await uploadedFile.CopyToAsync(fileStream);
+                    await uploadedFile.Information.CopyToAsync(fileStream);
                 }
 
                 //Convert file from EXCEL to PDF;
                 string dirPath = @"wwwroot\files\";
 
                 // TODO: may be allows uploadedFile.Name
-                return File(await ConvertJPGFile(dirPath, uploadedFile.FileName), "application/pdf");
+                return File(await ConvertJPGFile(dirPath, uploadedFile.Information.FileName), "application/pdf");
+
             }
 
             return View();
@@ -299,6 +308,7 @@ namespace File_Converter.Controllers
         /// <param name="url">Contains a link to the page which should be converted</param>
         /// <returns>If everything is ok, then current pdf file</returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Html_To_Pdf(string url)
         {
             // Set page size A3 and Landscape orientation;

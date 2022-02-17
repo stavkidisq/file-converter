@@ -1,17 +1,19 @@
-﻿@model IFormFile
+﻿@model File_Converter.Models.BusinessModels.UploadJpgModel
 @{
     ViewData["Title"] = "Jpg_To_Pdf";
 }
 
 <h1>From JPG to PDF</h1>
 
+<div asp-validation-summary="All"></div>
+
 <form asp-action="Jpg_To_Pdf" asp-controller="ConvertToPdf" method="post" enctype="multipart/form-data">
-    <input type="file" name="uploadedFile"/>
+    <input type="file" asp-for="Information"/>
     <input type="submit" value="Upload"/>
 </form>
 
 <h2>File</h2>
 @if(Model != null)
 {
- <p>@Model.FileName</p>   
+ <p>@Model.Information.FileName</p>   
 }

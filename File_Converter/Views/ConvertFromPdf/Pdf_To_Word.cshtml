@@ -1,17 +1,19 @@
-﻿@model IFormFile
+﻿@model File_Converter.Models.BusinessModels.UploadPdfModel
 @{
     ViewData["Title"] = "Pdf_To_Word";
 }
 
 <h1>From PDF to WORD</h1>
 
+<div asp-validation-summary="All"></div>
+
 <form asp-action="Pdf_To_Word" asp-controller="ConvertFromPdf" method="post" enctype="multipart/form-data">
-    <input type="file" name="uploadedFile"/>
+    <input type="file" asp-for="Information"/>
     <input type="submit" value="Upload"/>
 </form>
 
 <h2>File</h2>
 @if(Model != null)
 {
- <p>@Model.FileName</p>   
+ <p>@Model.Information.FileName</p>
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using File_Converter.Models.BusinessModels;
+using File_Converter.Models.ValidationAttributes;
+using Microsoft.AspNetCore.Mvc;
 using System.IO.Compression;
 
 namespace File_Converter.Controllers
@@ -38,23 +40,24 @@ namespace File_Converter.Controllers
         /// <param name="uploadedFile">Contains all information about file, which will be convert</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Pdf_To_Word(IFormFile uploadedFile)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Pdf_To_Word(UploadPdfModel uploadedFile)
         {
-            if(uploadedFile != null)
+            if(ModelState.IsValid)
             {
                 // Path to the folder Files
-                string path = @"\files\" + uploadedFile.FileName;
+                string path = @"\files\" + uploadedFile.Information.FileName;
 
                 // Save files in Files in catalog wwwroot
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                 {
-                    await uploadedFile.CopyToAsync(fileStream);
+                    await uploadedFile.Information.CopyToAsync(fileStream);
                 }
 
                 //Convert file from WORD to PDF
                 string dirPath = @"wwwroot\files\";
                 return File
-                    (await ConvertToDOCXFile(dirPath, uploadedFile.FileName), "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+                    (await ConvertToDOCXFile(dirPath, uploadedFile.Information.FileName), "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
             }
 
             return View();
@@ -98,23 +101,25 @@ namespace File_Converter.Controllers
         /// <param name="uploadedFile">Contains all information about file, which will be convert</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Pdf_To_PowerPoint(IFormFile uploadedFile)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Pdf_To_PowerPoint(UploadPdfModel uploadedFile)
         {
-            if (uploadedFile != null)
+            if(ModelState.IsValid)
             {
                 // Path to the folder Files
-                string path = @"\files\" + uploadedFile.FileName;
+                string path = @"\files\" + uploadedFile.Information.FileName;
 
                 // Save files in Files in catalog wwwroot
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                 {
-                    await uploadedFile.CopyToAsync(fileStream);
+                    await uploadedFile.Information.CopyToAsync(fileStream);
                 }
 
                 //Convert file from WORD to PDF
                 string dirPath = @"wwwroot\files\";
                 return File
-                    (await ConvertToPPTXFile(dirPath, uploadedFile.FileName), "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+                    (await ConvertToPPTXFile(dirPath, uploadedFile.Information.FileName), "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+
             }
 
             return View();
@@ -158,23 +163,24 @@ namespace File_Converter.Controllers
         /// <param name="uploadedFile">Contains all information about file, which will be convert</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Pdf_To_Excel(IFormFile uploadedFile)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Pdf_To_Excel(UploadPdfModel uploadedFile)
         {
-            if (uploadedFile != null)
+            if(ModelState.IsValid)
             {
                 // Path to the folder Files
-                string path = @"\files\" + uploadedFile.FileName;
+                string path = @"\files\" + uploadedFile.Information.FileName;
 
                 // Save files in Files in catalog wwwroot
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                 {
-                    await uploadedFile.CopyToAsync(fileStream);
+                    await uploadedFile.Information.CopyToAsync(fileStream);
                 }
 
                 //Convert file from WORD to PDF
                 string dirPath = @"wwwroot\files\";
                 return File
-                    (await ConvertToXLSXFile(dirPath, uploadedFile.FileName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                    (await ConvertToXLSXFile(dirPath, uploadedFile.Information.FileName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             }
 
             return View();
@@ -221,23 +227,24 @@ namespace File_Converter.Controllers
         /// <param name="uploadedFile">Contains all information about file, which will be convert</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Pdf_To_Jpg(IFormFile uploadedFile)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Pdf_To_Jpg(UploadPdfModel uploadedFile)
         {
-            if (uploadedFile != null)
+            if(ModelState.IsValid)
             {
                 // Path to the folder Files
-                string path = @"\files\" + uploadedFile.FileName;
+                string path = @"\files\" + uploadedFile.Information.FileName;
 
                 // Save files in Files in catalog wwwroot
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                 {
-                    await uploadedFile.CopyToAsync(fileStream);
+                    await uploadedFile.Information.CopyToAsync(fileStream);
                 }
 
                 //Convert file from WORD to PDF
                 string dirPath = @"wwwroot\files\";
                 return File
-                    (await ConvertToJPGFile(dirPath, uploadedFile.FileName), "application/zip");
+                    (await ConvertToJPGFile(dirPath, uploadedFile.Information.FileName), "application/zip");
             }
 
             return View();
