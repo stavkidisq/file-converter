@@ -57,7 +57,8 @@ namespace File_Converter.Controllers
                 //Convert file from WORD to PDF
                 string dirPath = @"wwwroot\files\";
                 return File
-                    (await ConvertToDOCXFile(dirPath, uploadedFile.Information.FileName), "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+                    (await ConvertToDOCXFile(dirPath, uploadedFile.Name, uploadedFile.Type), 
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileDownloadName: uploadedFile.Name+ ".docx");
             }
 
             return View();
@@ -69,16 +70,16 @@ namespace File_Converter.Controllers
         /// <param name="dirPath">Path to the current file directory</param>
         /// <param name="fileName">File name which will be converted</param>
         /// <returns></returns>
-        public async Task<byte[]> ConvertToDOCXFile(string dirPath, string fileName)
+        public async Task<byte[]> ConvertToDOCXFile(string dirPath, string fileName, string fileType)
         {
             // Open the source PDF document
-            Aspose.Pdf.Document document = new Aspose.Pdf.Document(dirPath + fileName);
+            Aspose.Pdf.Document document = new Aspose.Pdf.Document(dirPath + fileName+ fileType);
 
             // Save the file into MS document format
-            document.Save(dirPath + "convertedfile.docx", Aspose.Pdf.SaveFormat.DocX);
+            document.Save(dirPath + fileName + ".docx", Aspose.Pdf.SaveFormat.DocX);
 
             //Open document in browser
-            string docPath = @"wwwroot\files\convertedfile.docx";
+            string docPath = dirPath + fileName + ".docx";
             byte[] docBytes = await System.IO.File.ReadAllBytesAsync(docPath);
             await System.IO.File.WriteAllBytesAsync(docPath, docBytes);
 
@@ -118,8 +119,8 @@ namespace File_Converter.Controllers
                 //Convert file from WORD to PDF
                 string dirPath = @"wwwroot\files\";
                 return File
-                    (await ConvertToPPTXFile(dirPath, uploadedFile.Information.FileName), "application/vnd.openxmlformats-officedocument.presentationml.presentation");
-
+                    (await ConvertToPPTXFile(dirPath, uploadedFile.Name, uploadedFile.Type),
+                    "application/vnd.openxmlformats-officedocument.presentationml.presentation", fileDownloadName: uploadedFile.Name + ".pptx");
             }
 
             return View();
@@ -131,17 +132,17 @@ namespace File_Converter.Controllers
         /// <param name="dirPath">Path to the current file directory</param>
         /// <param name="fileName">File name which will be converted</param>
         /// <returns></returns>
-        public async Task<byte[]> ConvertToPPTXFile(string dirPath, string fileName)
+        public async Task<byte[]> ConvertToPPTXFile(string dirPath, string fileName, string fileType)
         {
             // Load PDF document
-            Aspose.Pdf.Document doc = new Aspose.Pdf.Document(dirPath + fileName);
+            Aspose.Pdf.Document doc = new Aspose.Pdf.Document(dirPath + fileName + fileType);
             // Instantiate PptxSaveOptions instance
             Aspose.Pdf.PptxSaveOptions pptx_save = new Aspose.Pdf.PptxSaveOptions();
             // Save the output in PPTX format
-            doc.Save(dirPath + "convertedfile.pptx", pptx_save);
+            doc.Save(dirPath + fileName + ".pptx", pptx_save);
 
             //Open document in browser
-            string docPath = @"wwwroot\files\convertedfile.pptx";
+            string docPath = dirPath + fileName + ".pptx";
             byte[] docBytes = await System.IO.File.ReadAllBytesAsync(docPath);
             await System.IO.File.WriteAllBytesAsync(docPath, docBytes);
 
@@ -180,7 +181,8 @@ namespace File_Converter.Controllers
                 //Convert file from WORD to PDF
                 string dirPath = @"wwwroot\files\";
                 return File
-                    (await ConvertToXLSXFile(dirPath, uploadedFile.Information.FileName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                    (await ConvertToXLSXFile(dirPath, uploadedFile.Name, uploadedFile.Type),
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileDownloadName: uploadedFile.Name + ".xlsx");
             }
 
             return View();
@@ -192,19 +194,19 @@ namespace File_Converter.Controllers
         /// <param name="dirPath">Path to the current file directory</param>
         /// <param name="fileName">File name which will be converted</param>
         /// <returns></returns>
-        public async Task<byte[]> ConvertToXLSXFile(string dirPath, string fileName)
+        public async Task<byte[]> ConvertToXLSXFile(string dirPath, string fileName, string fileType)
         {
             // Load PDF document
-            Aspose.Pdf.Document pdfDocument = new Aspose.Pdf.Document(dirPath + fileName);
+            Aspose.Pdf.Document pdfDocument = new Aspose.Pdf.Document(dirPath + fileName + fileType);
 
             // Instantiate ExcelSave Option object
             Aspose.Pdf.ExcelSaveOptions excelsave = new Aspose.Pdf.ExcelSaveOptions();
 
             // Save the output in XLS format
-            pdfDocument.Save(dirPath + "convertedfile.xlsx", excelsave);
+            pdfDocument.Save(dirPath + fileName + ".xlsx", excelsave);
 
             //Open document in browser
-            string docPath = @"wwwroot\files\convertedfile.xlsx";
+            string docPath = dirPath + fileName + ".xlsx";
             byte[] docBytes = await System.IO.File.ReadAllBytesAsync(docPath);
             await System.IO.File.WriteAllBytesAsync(docPath, docBytes);
 
@@ -244,7 +246,7 @@ namespace File_Converter.Controllers
                 //Convert file from WORD to PDF
                 string dirPath = @"wwwroot\files\";
                 return File
-                    (await ConvertToJPGFile(dirPath, uploadedFile.Information.FileName), "application/zip");
+                    (await ConvertToJPGFile(dirPath, uploadedFile.Name, uploadedFile.Type), "application/zip", fileDownloadName: uploadedFile.Name + ".zip");
             }
 
             return View();
@@ -256,29 +258,29 @@ namespace File_Converter.Controllers
         /// <param name="dirPath"></param>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public async Task<byte[]> ConvertToJPGFile(string dirPath, string fileName)
+        public async Task<byte[]> ConvertToJPGFile(string dirPath, string fileName, string fileType)
         {
             // Load PDF document
-            Aspose.Words.Document doc = new Aspose.Words.Document(dirPath + fileName);
+            Aspose.Words.Document doc = new Aspose.Words.Document(dirPath + fileName + fileType);
 
-            string _dirPath = dirPath + @"Test_zip\";
+            string _dirPath = dirPath + fileName + @"\";
             Directory.CreateDirectory(_dirPath);
 
             // Path of zip archive
-            string zipPath = dirPath + "Test_zip.zip";
+            string zipPath = dirPath + fileName + ".zip";
 
             //Read each page from PDF as PNG
             for (int i = 0; i < doc.PageCount; i++)
             {
                 // Save one page from PDF as PNG
                 var extractedPage = doc.ExtractPages(i, 1);
-                extractedPage.Save(_dirPath + $"test_{i}.png");
+                extractedPage.Save(_dirPath + fileName + $"{i}.png");
             }
 
             ZipFile.CreateFromDirectory(_dirPath, zipPath);
 
             //Open document in browser
-            string docPath = dirPath + "Test_zip.zip";
+            string docPath = dirPath + fileName + ".zip";
             byte[] docBytes = await System.IO.File.ReadAllBytesAsync(docPath);
             await System.IO.File.WriteAllBytesAsync(docPath, docBytes);
 

@@ -66,8 +66,7 @@ namespace File_Converter.Controllers
                 //Convert file from WORD to PDF
                 string dirPath = @"wwwroot\files\";
                 return File
-                    (await ConvertDOCXFile(dirPath, uploadedFile.Information.FileName), "application/pdf");
-
+                    (await ConvertDOCXFile(dirPath, uploadedFile.Name, uploadedFile.Type), "application/pdf", fileDownloadName: uploadedFile.Name + ".pdf");
             }
 
             return View();
@@ -79,16 +78,16 @@ namespace File_Converter.Controllers
         /// <param name="dirPath">Path to the current file directory</param>
         /// <param name="fileName">File name which will be converted</param>
         /// <returns>Array consisting from bytes of current PDF file</returns>
-        public async Task<byte[]> ConvertDOCXFile(string dirPath, string fileName)
+        public async Task<byte[]> ConvertDOCXFile(string dirPath, string fileName, string fileType)
         {
             //Load document
-            Aspose.Words.Document document = new Aspose.Words.Document(dirPath + fileName);
+            Aspose.Words.Document document = new Aspose.Words.Document(dirPath + fileName + fileType);
 
             //Convert WORD to PDF
-            document.Save(dirPath + "convertedfile.pdf");
+            document.Save(dirPath + fileName + ".pdf");
 
             //Open document in browser
-            string pdfPath = @"wwwroot\files\convertedfile.pdf";
+            string pdfPath = dirPath + fileName + ".pdf";
             byte[] pdfBytes = await System.IO.File.ReadAllBytesAsync(pdfPath);
             await System.IO.File.WriteAllBytesAsync(pdfPath, pdfBytes);
 
@@ -129,8 +128,8 @@ namespace File_Converter.Controllers
                 string dirPath = @"wwwroot\files\";
 
                 // TODO: may be allows uploadedFile.Name
-                return File(await ConvertPPTXFile(dirPath, uploadedFile.Information.FileName), "application/pdf");
-
+                return File
+                    (await ConvertPPTXFile(dirPath, uploadedFile.Name, uploadedFile.Type), "application/pdf", fileDownloadName: uploadedFile.Name + ".pdf");
             }
 
             return View();
@@ -142,16 +141,16 @@ namespace File_Converter.Controllers
         /// <param name="dirPath">Path to the current file directory</param>
         /// <param name="fileName">File name which will be converted</param>
         /// <returns>Array consisting from bytes of current PDF file</returns>
-        public async Task<byte[]> ConvertPPTXFile(string dirPath, string fileName)
+        public async Task<byte[]> ConvertPPTXFile(string dirPath, string fileName, string fileType)
         {
-            // Instantiate a Presentation object that represents a PPT file
-            Presentation presentation = new Presentation(dirPath + fileName);
+            // Instantiate a Presentation object that represents a PPTX file
+            Presentation presentation = new Presentation(dirPath + fileName + fileType);
 
             // Save the presentation as PDF
-            presentation.Save(dirPath + @"convertedfile.pdf", Aspose.Slides.Export.SaveFormat.Pdf);
+            presentation.Save(dirPath + fileName + ".pdf", Aspose.Slides.Export.SaveFormat.Pdf);
 
             //Launch document
-            string pdfPath = @"wwwroot\files\convertedfile.pdf";
+            string pdfPath = dirPath + fileName + ".pdf";
             byte[] pdfBytes = await System.IO.File.ReadAllBytesAsync(pdfPath);
             await System.IO.File.WriteAllBytesAsync(pdfPath, pdfBytes);
 
@@ -192,7 +191,8 @@ namespace File_Converter.Controllers
                 string dirPath = @"wwwroot\files\";
 
                 // TODO: may be allows uploadedFile.Name
-                return File(await ConvertEXCELFile(dirPath, uploadedFile.Information.FileName), "application/pdf");
+                return File
+                    (await ConvertEXCELFile(dirPath, uploadedFile.Name, uploadedFile.Type), "application/pdf",fileDownloadName: uploadedFile.Name + ".pdf");
 
             }
 
@@ -205,16 +205,16 @@ namespace File_Converter.Controllers
         /// <param name="dirPath">Path to the current file directory</param>
         /// <param name="fileName">File name which will be converted</param>
         /// <returns>Array consisting from bytes of current PDF file</returns>
-        public async Task<byte[]> ConvertEXCELFile(string dirPath, string fileName)
+        public async Task<byte[]> ConvertEXCELFile(string dirPath, string fileName, string fileType)
         {
             // Instantiate a Presentation object that represents a PPT file
-            Workbook presentation = new Workbook(dirPath + fileName);
+            Workbook presentation = new Workbook(dirPath + fileName + fileType);
 
             // Save the presentation as PDF
-            presentation.Save(dirPath + @"convertedfile.pdf");
+            presentation.Save(dirPath + fileName + ".pdf");
 
             //Launch document
-            string pdfPath = @"wwwroot\files\convertedfile.pdf";
+            string pdfPath = dirPath + fileName + ".pdf";
             byte[] pdfBytes = await System.IO.File.ReadAllBytesAsync(pdfPath);
             await System.IO.File.WriteAllBytesAsync(pdfPath, pdfBytes);
 
@@ -255,7 +255,8 @@ namespace File_Converter.Controllers
                 string dirPath = @"wwwroot\files\";
 
                 // TODO: may be allows uploadedFile.Name
-                return File(await ConvertJPGFile(dirPath, uploadedFile.Information.FileName), "application/pdf");
+                return File
+                    (await ConvertJPGFile(dirPath, uploadedFile.Name, uploadedFile.Type), "application/pdf", fileDownloadName: uploadedFile.Name + ".pdf");
 
             }
 
@@ -268,7 +269,7 @@ namespace File_Converter.Controllers
         /// <param name="dirPath">Path to the current file directory</param>
         /// <param name="fileName">File name which will be converted</param>
         /// <returns>Array consisting from bytes of current PDF file</returns>
-        public async Task<byte[]> ConvertJPGFile(string dirPath, string fileName)
+        public async Task<byte[]> ConvertJPGFile(string dirPath, string fileName, string fileType)
         {
             // Initialize new PDF document
             Aspose.Pdf.Document doc = new Aspose.Pdf.Document();
@@ -276,16 +277,16 @@ namespace File_Converter.Controllers
             // Add empty page in empty document
             Page page = doc.Pages.Add();
             Aspose.Pdf.Image image = new Aspose.Pdf.Image();
-            image.File = (dirPath + fileName);
+            image.File = (dirPath + fileName + fileType);
 
             // Add image on a page
             page.Paragraphs.Add(image);
 
             // Save output PDF file
-            doc.Save(dirPath + "convertedFile.pdf");
+            doc.Save(dirPath + fileName + ".pdf");
 
             //Launch document
-            string pdfPath = @"wwwroot\files\convertedfile.pdf";
+            string pdfPath = dirPath + fileName + ".pdf";
             byte[] pdfBytes = await System.IO.File.ReadAllBytesAsync(pdfPath);
             await System.IO.File.WriteAllBytesAsync(pdfPath, pdfBytes);
 
