@@ -9,5 +9,10 @@ namespace File_Converter.Controllers
         {
             return View();
         }
+
+        public IActionResult GetAllDocuments()
+        {
+            return View();
+        }
     }
 }

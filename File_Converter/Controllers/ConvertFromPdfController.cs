@@ -54,10 +54,9 @@ namespace File_Converter.Controllers
                     await uploadedFile.Information.CopyToAsync(fileStream);
                 }
 
-                //Convert file from WORD to PDF
-                string dirPath = @"wwwroot\files\";
                 return File
-                    (await ConvertToDOCXFile(dirPath, uploadedFile.Name, uploadedFile.Type), 
+                    (await ConvertToDOCXFile
+                    (@"wwwroot\files\", uploadedFile.Name, uploadedFile.Type), 
                     "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileDownloadName: uploadedFile.Name+ ".docx");
             }
 
@@ -116,10 +115,9 @@ namespace File_Converter.Controllers
                     await uploadedFile.Information.CopyToAsync(fileStream);
                 }
 
-                //Convert file from WORD to PDF
-                string dirPath = @"wwwroot\files\";
                 return File
-                    (await ConvertToPPTXFile(dirPath, uploadedFile.Name, uploadedFile.Type),
+                    (await ConvertToPPTXFile
+                    (@"wwwroot\files\", uploadedFile.Name, uploadedFile.Type),
                     "application/vnd.openxmlformats-officedocument.presentationml.presentation", fileDownloadName: uploadedFile.Name + ".pptx");
             }
 
@@ -178,10 +176,9 @@ namespace File_Converter.Controllers
                     await uploadedFile.Information.CopyToAsync(fileStream);
                 }
 
-                //Convert file from WORD to PDF
-                string dirPath = @"wwwroot\files\";
                 return File
-                    (await ConvertToXLSXFile(dirPath, uploadedFile.Name, uploadedFile.Type),
+                    (await ConvertToXLSXFile
+                    (@"wwwroot\files\", uploadedFile.Name, uploadedFile.Type),
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileDownloadName: uploadedFile.Name + ".xlsx");
             }
 
@@ -243,10 +240,10 @@ namespace File_Converter.Controllers
                     await uploadedFile.Information.CopyToAsync(fileStream);
                 }
 
-                //Convert file from WORD to PDF
-                string dirPath = @"wwwroot\files\";
                 return File
-                    (await ConvertToJPGFile(dirPath, uploadedFile.Name, uploadedFile.Type), "application/zip", fileDownloadName: uploadedFile.Name + ".zip");
+                    (await ConvertToJPGFile
+                    (@"wwwroot\files\", uploadedFile.Name, uploadedFile.Type),
+                    "application/zip", fileDownloadName: uploadedFile.Name + ".zip");
             }
 
             return View();
@@ -264,6 +261,12 @@ namespace File_Converter.Controllers
             Aspose.Words.Document doc = new Aspose.Words.Document(dirPath + fileName + fileType);
 
             string _dirPath = dirPath + fileName + @"\";
+
+            if(Directory.Exists(_dirPath))
+            {
+                Directory.Delete(_dirPath, true);
+            }
+
             Directory.CreateDirectory(_dirPath);
 
             // Path of zip archive
@@ -275,6 +278,11 @@ namespace File_Converter.Controllers
                 // Save one page from PDF as PNG
                 var extractedPage = doc.ExtractPages(i, 1);
                 extractedPage.Save(_dirPath + fileName + $"{i}.png");
+            }
+
+            if (System.IO.File.Exists(zipPath))
+            {
+                System.IO.File.Delete(zipPath);
             }
 
             ZipFile.CreateFromDirectory(_dirPath, zipPath);

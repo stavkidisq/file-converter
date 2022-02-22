@@ -63,10 +63,10 @@ namespace File_Converter.Controllers
                     await uploadedFile.Information.CopyToAsync(fileStream);
                 }
 
-                //Convert file from WORD to PDF
-                string dirPath = @"wwwroot\files\";
                 return File
-                    (await ConvertDOCXFile(dirPath, uploadedFile.Name, uploadedFile.Type), "application/pdf", fileDownloadName: uploadedFile.Name + ".pdf");
+                    (await ConvertDOCXFile
+                    (@"wwwroot\files\", uploadedFile.Name, uploadedFile.Type),
+                    "application/pdf", fileDownloadName: uploadedFile.Name + ".pdf");
             }
 
             return View();
@@ -124,12 +124,10 @@ namespace File_Converter.Controllers
                     await uploadedFile.Information.CopyToAsync(fileStream);
                 }
 
-                //Convert file from POWERPOINT to PDF;
-                string dirPath = @"wwwroot\files\";
-
-                // TODO: may be allows uploadedFile.Name
                 return File
-                    (await ConvertPPTXFile(dirPath, uploadedFile.Name, uploadedFile.Type), "application/pdf", fileDownloadName: uploadedFile.Name + ".pdf");
+                    (await ConvertPPTXFile
+                    (@"wwwroot\files\", uploadedFile.Name, uploadedFile.Type),
+                    "application/pdf", fileDownloadName: uploadedFile.Name + ".pdf");
             }
 
             return View();
@@ -187,12 +185,8 @@ namespace File_Converter.Controllers
                     await uploadedFile.Information.CopyToAsync(fileStream);
                 }
 
-                //Convert file from EXCEL to PDF;
-                string dirPath = @"wwwroot\files\";
-
-                // TODO: may be allows uploadedFile.Name
                 return File
-                    (await ConvertEXCELFile(dirPath, uploadedFile.Name, uploadedFile.Type), "application/pdf",fileDownloadName: uploadedFile.Name + ".pdf");
+                    (await ConvertEXCELFile(@"wwwroot\files\", uploadedFile.Name, uploadedFile.Type), "application/pdf",fileDownloadName: uploadedFile.Name + ".pdf");
 
             }
 
@@ -251,12 +245,8 @@ namespace File_Converter.Controllers
                     await uploadedFile.Information.CopyToAsync(fileStream);
                 }
 
-                //Convert file from EXCEL to PDF;
-                string dirPath = @"wwwroot\files\";
-
-                // TODO: may be allows uploadedFile.Name
                 return File
-                    (await ConvertJPGFile(dirPath, uploadedFile.Name, uploadedFile.Type), "application/pdf", fileDownloadName: uploadedFile.Name + ".pdf");
+                    (await ConvertJPGFile(@"wwwroot\files\", uploadedFile.Name, uploadedFile.Type), "application/pdf", fileDownloadName: uploadedFile.Name + ".pdf");
 
             }
 
